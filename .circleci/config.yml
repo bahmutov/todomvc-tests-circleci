@@ -25,7 +25,29 @@ jobs:
             echo "TEST_BRANCH is << pipeline.parameters.TEST_BRANCH >>"
             echo "TEST_URL is << pipeline.parameters.TEST_URL >>"
 
+  # preview deploys might take a little bit to be ready
+  # this job pings the TEST_URL to check if the deployment has finished
+  wait-for-deploy:
+    machine:
+      image: ubuntu-2004:202104-01
+    steps:
+      # if there is no TEST_URL set, skip this job
+      - unless:
+          condition: << pipeline.parameters.TEST_URL >>
+          steps:
+            # https://circleci.com/docs/2.0/configuration-reference/#ending-a-job-from-within-a-step
+            - run: circleci-agent step halt
+      - run:
+          name: wait for deployment
+          command: |
+            echo "Using wait-on to check if the URL << pipeline.parameters.TEST_URL >> responds"
+            echo "See https://www.npmjs.com/package/wait-on"
+            npx wait-on --verbose \
+              --interval 10000 --timeout 60000 \
+              << pipeline.parameters.TEST_URL >>
+
 workflows:
   build:
     jobs:
       - info
+      - wait-for-deploy
