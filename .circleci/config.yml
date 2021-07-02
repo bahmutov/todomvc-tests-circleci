@@ -1,0 +1,31 @@
+# to use orbs, must use version >= 2.1
+version: 2.1
+orbs:
+  # import Cypress orb by specifying an exact version x.y.z
+  # or the latest version 1.x.x using "@1" syntax
+  # https://github.com/cypress-io/circleci-orb
+  cypress: cypress-io/cypress@1
+
+parameters:
+  TEST_BRANCH:
+    type: string
+    default: 'main'
+  TEST_URL:
+    type: string
+    default: ''
+
+jobs:
+  info:
+    machine:
+      image: ubuntu-2004:202104-01
+    steps:
+      - run:
+          name: print variables
+          command: |
+            echo "TEST_BRANCH is << pipeline.parameters.TEST_BRANCH >>"
+            echo "TEST_URL is << pipeline.parameters.TEST_URL >>"
+
+workflows:
+  build:
+    jobs:
+      - info
