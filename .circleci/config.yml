@@ -51,3 +51,17 @@ workflows:
     jobs:
       - info
       - wait-for-deploy
+
+      - cypress/run:
+          name: Cypress E2E tests
+          requires:
+            - wait-for-deploy
+          # if the pipeline has TEST_URL parameter,
+          # pass it to Cypress as base url
+          # using conditional template syntax
+          # https://circleci.com/docs/2.0/reusing-config/
+          config: <<# pipeline.parameters.TEST_URL >>'baseUrl=<< pipeline.parameters.TEST_URL >>'<</ pipeline.parameters.TEST_URL >>
+          # save videos and screenshots on Circle as artifacts
+          store_artifacts: true
+          # we do not need to save the workspace after the tests are done
+          no-workspace: true
