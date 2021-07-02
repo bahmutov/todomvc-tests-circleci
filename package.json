@@ -1,0 +1,24 @@
+{
+  "name": "todomvc-tests-circleci",
+  "version": "1.0.0",
+  "description": "CircleCI pipeline for running E2E tests against deployed URL",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahmutov/todomvc-tests.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bahmutov/todomvc-tests/issues"
+  },
+  "homepage": "https://github.com/bahmutov/todomvc-tests#readme",
+  "devDependencies": {
+    "cypress": "^7.6.0",
+    "prettier": "^2.3.2"
+  }
+}
