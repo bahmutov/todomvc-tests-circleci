@@ -10,9 +10,10 @@ parameters:
   TEST_BRANCH:
     type: string
     default: 'main'
+  # by default, test the production deployment
   TEST_URL:
     type: string
-    default: ''
+    default: 'https://todomvc-no-tests-vercel.vercel.app/'
 
 jobs:
   info:
