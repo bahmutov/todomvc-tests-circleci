@@ -15,6 +15,38 @@ parameters:
     type: string
     default: 'https://todomvc-no-tests-vercel.vercel.app/'
 
+# https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-commands
+commands:
+  switch_branch:
+    description: |
+      Changes the current branch to the latest commit on the specific branch.
+      NOTE: if the branch does not exist, does nothing.
+    parameters:
+      BRANCH_NAME:
+        type: string
+        default: ''
+    steps:
+      - when:
+          condition: << parameters.BRANCH_NAME >>
+          steps:
+            - run:
+                name: Checkout branch << parameters.BRANCH_NAME >>
+                command: |
+                  echo "Switching to branch << parameters.BRANCH_NAME >> if it exists"
+                  git checkout << parameters.BRANCH_NAME >> || true
+                  git pull origin << parameters.BRANCH_NAME >> || true
+  print_git:
+    description: |
+      Prints the current git branch and the commit hash.
+    steps:
+      - run:
+          name: Print current Git info
+          # looks like Cypress default executor does not have
+          # a very recent Git version, thus we cannot use "--show-current"
+          command: |
+            echo "current branch is: $(git branch -a)"
+            echo "current commit is: $(git rev-parse --short HEAD)"
+
 jobs:
   info:
     machine:
@@ -61,6 +93,10 @@ workflows:
           name: Cypress E2E tests
           requires:
             - wait-for-deploy
+          # switch to the test branch before installing and running tests
+          post-checkout:
+            - switch_branch:
+                BRANCH_NAME: << pipeline.parameters.TEST_BRANCH >>
           config: 'baseUrl=<< pipeline.parameters.TEST_URL >>'
           # save videos and screenshots on Circle as artifacts
           store_artifacts: true
