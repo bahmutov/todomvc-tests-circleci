@@ -102,3 +102,8 @@ workflows:
           store_artifacts: true
           # we do not need to save the workspace after the tests are done
           no-workspace: true
+          # record test results on Cypress Dashboard
+          record: true
+          group: e2e
+          # tag the recording with the branch name to make it easier to find
+          tag: '<< pipeline.parameters.TEST_BRANCH >>'
