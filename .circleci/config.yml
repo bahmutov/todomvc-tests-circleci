@@ -106,4 +106,4 @@ workflows:
           record: true
           group: e2e
           # tag the recording with the branch name to make it easier to find
-          tag: '<< pipeline.parameters.TEST_BRANCH >>'
+          tags: '<< pipeline.parameters.TEST_BRANCH >>'
