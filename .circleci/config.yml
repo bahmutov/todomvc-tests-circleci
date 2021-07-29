@@ -21,8 +21,8 @@ parameters:
     type: string
     default: ''
   BURN:
-    type: number
-    default: 0
+    type: integer
+    default: 1
 
 # https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-commands
 commands:
@@ -66,6 +66,8 @@ jobs:
           command: |
             echo "TEST_BRANCH is << pipeline.parameters.TEST_BRANCH >>"
             echo "TEST_URL is << pipeline.parameters.TEST_URL >>"
+            echo "GREP is << pipeline.parameters.GREP >>"
+            echo "BURN is << pipeline.parameters.BURN >>"
 
   # preview deploys might take a little bit to be ready
   # this job pings the TEST_URL to check if the deployment has finished
@@ -106,9 +108,19 @@ workflows:
           post-checkout:
             - switch_branch:
                 BRANCH_NAME: << pipeline.parameters.TEST_BRANCH >>
+            - run:
+                name: Export grep parameters as environment variables
+                # following the example from https://circleci.com/docs/2.0/env-vars/
+                # Exports GREP and BURN to environment variables
+                # CYPRESS_GREP and CYPRESS_BURN
+                # that Cypress will read automatically and
+                # make available in Cypress.env()
+                command: |
+                  echo 'export CYPRESS_GREP="<< pipeline.parameters.GREP >>"' >> $BASH_ENV
+                  echo 'export CYPRESS_BURN="<< pipeline.parameters.BURN >>"' >> $BASH_ENV
           config: 'baseUrl=<< pipeline.parameters.TEST_URL >>'
           # pass grep parameters if any
-          env: 'grep=<< pipeline.parameters.GREP >>,burn=<< pipeline.parameters.BURN >>'
+          # env: 'grep=<< pipeline.parameters.GREP >>,burn=<< pipeline.parameters.BURN >>'
           # save videos and screenshots on Circle as artifacts
           store_artifacts: true
           # we do not need to save the workspace after the tests are done
