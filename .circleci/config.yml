@@ -108,16 +108,13 @@ workflows:
           post-checkout:
             - switch_branch:
                 BRANCH_NAME: << pipeline.parameters.TEST_BRANCH >>
-            - run:
-                name: Export grep parameters as environment variables
-                # following the example from https://circleci.com/docs/2.0/env-vars/
-                # Exports GREP and BURN to environment variables
-                # CYPRESS_GREP and CYPRESS_BURN
-                # that Cypress will read automatically and
-                # make available in Cypress.env() as Cypress.env('grep') and Cypress.env('burn')
-                command: |
-                  echo 'export CYPRESS_grep="<< pipeline.parameters.GREP >>"' >> $BASH_ENV
-                  echo 'export CYPRESS_burn=<< pipeline.parameters.BURN >>' >> $BASH_ENV
+
+          # following the example from https://circleci.com/docs/2.0/env-vars/
+          # Exports GREP and BURN to environment variables
+          # CYPRESS_GREP and CYPRESS_BURN
+          # that Cypress will read automatically and
+          # make available in Cypress.env() as Cypress.env('grep') and Cypress.env('burn')
+          command-prefix: CYPRESS_grep="<< pipeline.parameters.GREP >>" CYPRESS_burn=<< pipeline.parameters.BURN >>
           config: 'baseUrl=<< pipeline.parameters.TEST_URL >>'
           # pass grep parameters if any
           # env: 'grep=<< pipeline.parameters.GREP >>,burn=<< pipeline.parameters.BURN >>'
