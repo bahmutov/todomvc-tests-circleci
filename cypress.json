@@ -3,5 +3,7 @@
   "fixturesFolder": false,
   "supportFile": false,
   "pluginsFile": false,
-  "projectId": "15cjtg"
+  "projectId": "15cjtg",
+  "viewportWidth": 500,
+  "viewportHeight": 300
 }
