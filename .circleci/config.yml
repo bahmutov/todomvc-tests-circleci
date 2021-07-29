@@ -114,10 +114,10 @@ workflows:
                 # Exports GREP and BURN to environment variables
                 # CYPRESS_GREP and CYPRESS_BURN
                 # that Cypress will read automatically and
-                # make available in Cypress.env()
+                # make available in Cypress.env() as Cypress.env('grep') and Cypress.env('burn')
                 command: |
-                  echo 'export CYPRESS_GREP="<< pipeline.parameters.GREP >>"' >> $BASH_ENV
-                  echo 'export CYPRESS_BURN="<< pipeline.parameters.BURN >>"' >> $BASH_ENV
+                  echo 'export CYPRESS_grep="<< pipeline.parameters.GREP >>"' >> $BASH_ENV
+                  echo 'export CYPRESS_burn=<< pipeline.parameters.BURN >>' >> $BASH_ENV
           config: 'baseUrl=<< pipeline.parameters.TEST_URL >>'
           # pass grep parameters if any
           # env: 'grep=<< pipeline.parameters.GREP >>,burn=<< pipeline.parameters.BURN >>'
