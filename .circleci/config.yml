@@ -14,6 +14,15 @@ parameters:
   TEST_URL:
     type: string
     default: 'https://todomvc-no-tests-vercel.vercel.app/'
+  # allow running selected tests once or multiple times
+  # using the cypress-grep plugin
+  # https://github.com/cypress-io/cypress-grep
+  GREP:
+    type: string
+    default: ''
+  BURN:
+    type: number
+    default: 0
 
 # https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-commands
 commands:
@@ -98,6 +107,8 @@ workflows:
             - switch_branch:
                 BRANCH_NAME: << pipeline.parameters.TEST_BRANCH >>
           config: 'baseUrl=<< pipeline.parameters.TEST_URL >>'
+          # pass grep parameters if any
+          env: 'grep=<< pipeline.parameters.GREP >>,burn=<< pipeline.parameters.BURN >>'
           # save videos and screenshots on Circle as artifacts
           store_artifacts: true
           # we do not need to save the workspace after the tests are done
