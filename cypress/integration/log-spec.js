@@ -1,17 +1,4 @@
 /// <reference types="cypress" />
-
-function visitBlankPage() {
-  cy.window().then((win) => {
-    win.location.href = 'about:blank'
-  })
-}
-
-beforeEach(() => {
-  cy.window().then((win) => {
-    win.location.href = 'about:blank'
-  })
-})
-
 beforeEach(() => {
   cy.visit('/', {
     onBeforeLoad(win) {
