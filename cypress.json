@@ -3,5 +3,8 @@
   "fixturesFolder": false,
   "projectId": "15cjtg",
   "viewportWidth": 500,
-  "viewportHeight": 300
+  "viewportHeight": 300,
+  "env": {
+    "grepFilterSpecs": true
+  }
 }
