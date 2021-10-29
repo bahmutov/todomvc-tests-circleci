@@ -22,4 +22,8 @@ module.exports = (on, config) => {
 
   // https://github.com/bahmutov/cypress-grep
   require('cypress-grep/src/plugin')(config)
+
+  // cypress-grep could modify the config (the list of spec files)
+  // thus it is important to return the modified config to Cypress
+  return config
 }
