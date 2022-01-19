@@ -105,9 +105,13 @@ workflows:
       - info
       - wait-for-deploy
 
+      - cypress/install:
+          name: Cypress install
+
       - cypress/run:
           name: Cypress E2E tests
           requires:
+            - Cypress install
             - wait-for-deploy
           # switch to the test branch before installing and running tests
           post-checkout:
@@ -125,6 +129,8 @@ workflows:
           no-workspace: true
           # record test results on Cypress Dashboard
           record: true
+          parallel: true
+          parallelism: 2
           group: e2e
           # tag the recording with the branch name to make it easier to find
           tags: '<< pipeline.parameters.TEST_BRANCH >>'
