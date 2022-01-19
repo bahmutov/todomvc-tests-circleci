@@ -26,12 +26,12 @@ module.exports = (on, config) => {
   // https://github.com/bahmutov/cypress-grep
   require('cypress-grep/src/plugin')(config)
 
-  if (process.env.TEST_COMMIT) {
+  const testCommit = config.env.testCommit || process.env.TEST_COMMIT
+  if (testCommit) {
     const owner = 'bahmutov'
     const repo = 'todomvc-no-tests-vercel'
-    const commit = process.env.TEST_COMMIT
     console.log('after finishing the test run will report the results')
-    console.log('as a status check %s/%s commit %s', owner, repo, commit)
+    console.log('as a status check %s/%s commit %s', owner, repo, testCommit)
 
     on('after:run', async (runResults) => {
       // console.dir(runResults, { depth: null })
@@ -40,7 +40,7 @@ module.exports = (on, config) => {
       const options = {
         owner,
         repo,
-        commit,
+        commit: testCommit,
         status: runResults.totalFailed > 0 ? 'failure' : 'success',
         description: `${runResults.totalTests} tests finished`,
         context: 'Cypress tests',

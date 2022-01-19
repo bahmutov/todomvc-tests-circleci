@@ -116,7 +116,7 @@ workflows:
 
           config: 'baseUrl=<< pipeline.parameters.TEST_URL >>'
           # pass the cypress-grep parameters through the --env parameter
-          env: grep="<< pipeline.parameters.GREP >>",burn=<< pipeline.parameters.BURN >>
+          env: grep="<< pipeline.parameters.GREP >>",burn=<< pipeline.parameters.BURN >>,testCommit=<< pipeline.parameters.TEST_COMMIT >>
           # pass grep parameters if any
           # env: 'grep=<< pipeline.parameters.GREP >>,burn=<< pipeline.parameters.BURN >>'
           # save videos and screenshots on Circle as artifacts
