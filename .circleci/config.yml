@@ -23,6 +23,10 @@ parameters:
   BURN:
     type: integer
     default: 1
+  TEST_COMMIT:
+    description: 'Source commit SHA if known to report status checks'
+    type: string
+    default: ''
 
 # https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-commands
 commands:
@@ -68,6 +72,7 @@ jobs:
             echo "TEST_URL is << pipeline.parameters.TEST_URL >>"
             echo "GREP is << pipeline.parameters.GREP >>"
             echo "BURN is << pipeline.parameters.BURN >>"
+            echo "TEST_COMMIT is << pipeline.parameters.TEST_COMMIT >>"
 
   # preview deploys might take a little bit to be ready
   # this job pings the TEST_URL to check if the deployment has finished

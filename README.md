@@ -1,4 +1,5 @@
 # todomvc-tests-circleci [![CircleCI](https://circleci.com/gh/bahmutov/todomvc-tests-circleci/tree/main.svg?style=svg)](https://circleci.com/gh/bahmutov/todomvc-tests-circleci/tree/main) [![todomvc-tests-circleci](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/simple/15cjtg/main&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/15cjtg/runs)
+
 > Example E2E tests for an app that lives in a separate repository [bahmutov/todomvc-no-tests-vercel](https://github.com/bahmutov/todomvc-no-tests-vercel)
 
 Read the blog post [How to Keep Cypress Tests in Another Repo While Using CircleCI](https://glebbahmutov.com/blog/how-to-keep-cypress-tests-in-another-repo-with-circleci/)
@@ -24,3 +25,14 @@ Click the "Run Pipeline" button. Only that test should execute, while other test
 ## Running a single test multiple times in a row
 
 You can "burn" a test by running the CircleCI pipeline with `GREP` and `BURN` parameters, read [Burn Cypress Tests on CircleCI](https://glebbahmutov.com/blog/burn-tests-on-circle/)
+
+## Small print
+
+Author: Gleb Bahmutov &copy; 2021
+
+- [@bahmutov](https://twitter.com/bahmutov)
+- [glebbahmutov.com](https://glebbahmutov.com)
+- [blog](https://glebbahmutov.com/blog/)
+- [videos](https://www.youtube.com/glebbahmutov)
+- [presentations](https://slides.com/bahmutov)
+- [cypress.tips](https://cypress.tips)
