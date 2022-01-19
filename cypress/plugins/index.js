@@ -37,49 +37,15 @@ module.exports = (on, config) => {
   // https://github.com/bahmutov/cypress-grep
   require('cypress-grep/src/plugin')(config)
 
-  const testCommit = config.env.testCommit || process.env.TEST_COMMIT
-  if (testCommit) {
-    const owner = 'bahmutov'
-    const repo = 'todomvc-no-tests-vercel'
-    console.log('after finishing the test run will report the results')
-    console.log('as a status check %s/%s commit %s', owner, repo, testCommit)
-
-    const context = getContext()
-
-    on('before:run', async (runResults) => {
-      // put the target repo information into the options
-
-      const options = {
-        owner,
-        repo,
-        commit: testCommit,
-        status: 'pending',
-        description: 'Tests running',
-        context,
-        targetUrl: process.env.CIRCLE_BUILD_URL,
-      }
-      const envOptions = {
-        token: process.env.GITHUB_TOKEN,
-      }
-      await setGitHubCommitStatus(options, envOptions)
-    })
-
-    on('after:run', async (runResults) => {
-      const options = {
-        owner,
-        repo,
-        commit: testCommit,
-        status: runResults.totalFailed > 0 ? 'failure' : 'success',
-        description: `${runResults.totalTests} tests finished`,
-        context,
-        targetUrl: runResults.runUrl || process.env.CIRCLE_BUILD_URL,
-      }
-      const envOptions = {
-        token: process.env.GITHUB_TOKEN,
-      }
-      await setGitHubCommitStatus(options, envOptions)
-    })
-  }
+  // when we are done, post the status to GitHub
+  // application repo, using the passed commit SHA
+  // https://github.com/bahmutov/cypress-set-github-status
+  require('cypress-set-github-status')(on, config, {
+    owner: 'bahmutov',
+    repo: 'todomvc-no-tests-vercel',
+    commit: config.env.testCommit || process.env.TEST_COMMIT,
+    token: process.env.GITHUB_TOKEN || process.env.PERSONAL_GH_TOKEN,
+  })
 
   // cypress-grep could modify the config (the list of spec files)
   // thus it is important to return the modified config to Cypress
