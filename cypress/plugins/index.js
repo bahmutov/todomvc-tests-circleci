@@ -15,6 +15,17 @@ const { setGitHubCommitStatus } = require('../../src')
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
+function getContext() {
+  let context = 'Cypress tests'
+  if (process.env.CIRCLE_NODE_INDEX && process.env.CIRCLE_NODE_TOTAL) {
+    // index starts with 0
+    const machineIndex = Number(process.env.CIRCLE_NODE_INDEX) + 1
+    const totalMachines = Number(process.env.CIRCLE_NODE_TOTAL)
+    context += ` (machine ${machineIndex}/${totalMachines})`
+  }
+  return context
+}
+
 /**
  * @type {Cypress.PluginConfig}
  */
@@ -33,18 +44,27 @@ module.exports = (on, config) => {
     console.log('after finishing the test run will report the results')
     console.log('as a status check %s/%s commit %s', owner, repo, testCommit)
 
-    on('after:run', async (runResults) => {
-      // console.dir(runResults, { depth: null })
+    const context = getContext()
 
+    on('before:run', async (runResults) => {
       // put the target repo information into the options
-      let context = 'Cypress tests'
-      if (process.env.CIRCLE_NODE_INDEX && process.env.CIRCLE_NODE_TOTAL) {
-        // index starts with 0
-        const machineIndex = Number(process.env.CIRCLE_NODE_INDEX) + 1
-        const totalMachines = Number(process.env.CIRCLE_NODE_TOTAL)
-        context += ` (machine ${machineIndex}/${totalMachines})`
-      }
 
+      const options = {
+        owner,
+        repo,
+        commit: testCommit,
+        status: 'pending',
+        description: 'Tests running',
+        context,
+        targetUrl: process.env.CIRCLE_BUILD_URL,
+      }
+      const envOptions = {
+        token: process.env.GITHUB_TOKEN,
+      }
+      await setGitHubCommitStatus(options, envOptions)
+    })
+
+    on('after:run', async (runResults) => {
       const options = {
         owner,
         repo,
