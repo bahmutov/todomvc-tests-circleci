@@ -37,13 +37,21 @@ module.exports = (on, config) => {
       // console.dir(runResults, { depth: null })
 
       // put the target repo information into the options
+      let context = 'Cypress tests'
+      if (process.env.CIRCLE_NODE_INDEX && process.env.CIRCLE_NODE_TOTAL) {
+        // index starts with 0
+        const machineIndex = Number(process.env.CIRCLE_NODE_INDEX) + 1
+        const totalMachines = Number(process.env.CIRCLE_NODE_TOTAL)
+        context += ` (machine ${machineIndex}/${totalMachines})`
+      }
+
       const options = {
         owner,
         repo,
         commit: testCommit,
         status: runResults.totalFailed > 0 ? 'failure' : 'success',
         description: `${runResults.totalTests} tests finished`,
-        context: 'Cypress tests',
+        context,
         targetUrl: runResults.runUrl || process.env.CIRCLE_BUILD_URL,
       }
       const envOptions = {
