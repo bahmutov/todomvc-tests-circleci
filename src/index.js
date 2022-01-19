@@ -62,6 +62,13 @@ async function setGitHubCommitStatus(options, envOptions) {
       target_url: options.targetUrl,
     },
   })
+  console.log(
+    'set commit %s status %s with %s %s',
+    options.commit,
+    options.status,
+    options.context,
+    options.description,
+  )
   console.log('response status: %d %s', res.statusCode, res.statusMessage)
 }
 
