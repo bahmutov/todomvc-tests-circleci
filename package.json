@@ -4,7 +4,9 @@
   "description": "CircleCI pipeline for running E2E tests against deployed URL",
   "private": true,
   "scripts": {
-    "test": "cypress run"
+    "test": "cypress run",
+    "tags": "find-cypress-specs --tags",
+    "names": "find-cypress-specs --names"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
     "cypress-grep": "^2.13.1",
     "cypress-set-github-status": "^1.1.0",
     "debug": "^4.3.3",
+    "find-cypress-specs": "^1.7.0",
     "got": "^11.8.3",
     "prettier": "^2.3.2"
   }
