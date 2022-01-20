@@ -30,9 +30,28 @@ function getContext() {
  * @type {Cypress.PluginConfig}
  */
 // eslint-disable-next-line no-unused-vars
-module.exports = (on, config) => {
+module.exports = async (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
+
+  // include this plugin before cypress-grep
+  // so if we find the test tags in the pull request body
+  // we can grep for them by setting the grep config
+  await require('grep-tests-from-pull-requests')(on, config, {
+    // try to find checkbox lines in the pull request body with these tags
+    tags: ['@log', '@sanity', '@user'],
+    // repo with the pull request text to read
+    owner: 'bahmutov',
+    repo: 'todomvc-no-tests-vercel',
+    // pass the pull request number in the above repo
+    // we will grab the tests to run from the body of the pull request (if the number is known)
+    pull: config.env.pullRequest,
+    // if the pull request number is unknown, pass the commit SHA
+    // as a fallback. The plugin will try to find the PR with this head commit
+    commit: config.env.testCommit,
+    // to get a private repo above, you might need a personal token
+    token: process.env.PERSONAL_GH_TOKEN || process.env.GITHUB_TOKEN,
+  })
 
   // https://github.com/bahmutov/cypress-grep
   require('cypress-grep/src/plugin')(config)
