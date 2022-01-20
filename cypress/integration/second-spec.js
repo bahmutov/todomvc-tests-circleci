@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-it('completes second item', () => {
+it('completes second item', { tags: ['@sanity', '@user'] }, () => {
   cy.visit('/')
   // application starts with 3 todos
   cy.get('.todo')

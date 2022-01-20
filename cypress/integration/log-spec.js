@@ -9,7 +9,7 @@ beforeEach(() => {
   cy.get('.todo').should('have.length', 3)
 })
 
-it('logs message on startup', () => {
+it('logs message on startup', { tags: '@sanity' }, () => {
   cy.get('@log').should('have.been.calledOnceWithExactly', 'rendering app')
 })
 

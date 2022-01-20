@@ -26,6 +26,10 @@ Click the "Run Pipeline" button. Only that test should execute, while other test
 
 You can "burn" a test by running the CircleCI pipeline with `GREP` and `BURN` parameters, read [Burn Cypress Tests on CircleCI](https://glebbahmutov.com/blog/burn-tests-on-circle/)
 
+## Tagged tests
+
+There are several test tags used in these specs: `@sanity`, `@user`
+
 ## Small print
 
 Author: Gleb Bahmutov &copy; 2021

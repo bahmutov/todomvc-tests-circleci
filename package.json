@@ -22,7 +22,7 @@
   "devDependencies": {
     "arg": "^5.0.1",
     "cypress": "^8.7.0",
-    "cypress-grep": "^2.9.1",
+    "cypress-grep": "^2.13.1",
     "cypress-set-github-status": "^1.1.0",
     "debug": "^4.3.3",
     "got": "^11.8.3",
