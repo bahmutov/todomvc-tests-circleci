@@ -114,7 +114,8 @@ workflows:
                 command: |
                   if [[ ! -z "<< pipeline.parameters.TEST_COMMIT >>" ]]; then
                     echo "Setting commit status to pending"
-                    npx set-gh-status --owner bahmutov --repo todomvc-no-tests-vercel \
+                    npx -p cypress-set-github-status set-gh-status \
+                      --owner bahmutov --repo todomvc-no-tests-vercel \
                       --sha << pipeline.parameters.TEST_COMMIT >> --status pending \
                       --context "Cypress E2E tests" --description "Running tests..."
                   else
