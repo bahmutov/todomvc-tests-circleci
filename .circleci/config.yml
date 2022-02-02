@@ -107,6 +107,14 @@ workflows:
 
       - cypress/install:
           name: Cypress install
+          # after install, set the pending commit status right away
+          post-install:
+            - run:
+                name: Set common commit status
+                command: |
+                  npx set-gh-status --owner bahmutov --repo todomvc-no-tests-vercel \
+                    --sha < pipeline.parameters.TEST_COMMIT >> --status pending \
+                    --context "Cypress E2E tests" --description "Running tests..."
 
       - cypress/run:
           name: Cypress E2E tests
