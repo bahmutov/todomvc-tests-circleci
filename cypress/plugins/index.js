@@ -64,6 +64,9 @@ module.exports = async (on, config) => {
     repo: 'todomvc-no-tests-vercel',
     commit: config.env.testCommit || process.env.TEST_COMMIT,
     token: process.env.GITHUB_TOKEN || process.env.PERSONAL_GH_TOKEN,
+    // after setting the individual job status, also
+    // update the common E2E test status check
+    commonStatus: 'Cypress E2E tests',
   })
 
   // cypress-grep could modify the config (the list of spec files)
