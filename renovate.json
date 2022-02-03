@@ -10,7 +10,13 @@
   "packageRules": [
     {
       "packagePatterns": ["*"],
-      "excludePackagePatterns": ["cypress", "cypress-grep"],
+      "excludePackagePatterns": [
+        "cypress",
+        "cypress-grep",
+        "find-cypress-specs",
+        "cypress-set-github-status",
+        "grep-tests-from-pull-requests"
+      ],
       "enabled": false
     }
   ]
