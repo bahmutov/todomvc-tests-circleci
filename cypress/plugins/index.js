@@ -31,6 +31,16 @@ function hasPickedTestsToRun(testsToRun) {
   return true
 }
 
+function getCirclePrNumber(prUrl) {
+  // prUrl is like https://github.com/.../pull/9
+  const match = prUrl.match(/\/pull\/(?<pr>\d+)/)
+  if (!match) {
+    console.error('Cannot find the pull request number in the URL %s', prUrl)
+    return
+  }
+  return parseInt(match.groups.pr)
+}
+
 /**
  * @type {Cypress.PluginConfig}
  */
@@ -42,9 +52,10 @@ module.exports = async (on, config) => {
   // include this plugin before cypress-grep
   // so if we find the test tags in the pull request body
   // we can grep for them by setting the grep config
-  const testsToRun = await pickTestsFromPullRequest(on, config, {
+  const tags = ['@log', '@sanity', '@user']
+  let testsToRun = await pickTestsFromPullRequest(on, config, {
     // try to find checkbox lines in the pull request body with these tags
-    tags: ['@log', '@sanity', '@user'],
+    tags,
     // repo with the pull request text to read
     owner: 'bahmutov',
     repo: 'todomvc-no-tests-vercel',
@@ -57,9 +68,23 @@ module.exports = async (on, config) => {
     // to get a private repo above, you might need a personal token
     token: process.env.PERSONAL_GH_TOKEN || process.env.GITHUB_TOKEN,
   })
-  // TODO if there are no tests picked from the app repo, try picking from this repo
-  if (!hasPickedTestsToRun(testsToRun)) {
+  console.log('picked tests to run from app repo %o', testsToRun)
+
+  if (!hasPickedTestsToRun(testsToRun) && process.env.CIRCLE_PULL_REQUEST) {
     console.log('checking if there are tests to run in this repo pull request')
+    const prNumber = getCirclePrNumber(process.env.CIRCLE_PULL_REQUEST)
+    if (prNumber) {
+      testsToRun = await pickTestsFromPullRequest(on, config, {
+        tags,
+        // search this repo
+        owner: 'bahmutov',
+        repo: process.env.CIRCLE_PROJECT_REPONAME,
+        pull: prNumber,
+        // to get a private repo above, you might need a personal token
+        token: process.env.PERSONAL_GH_TOKEN || process.env.GITHUB_TOKEN,
+      })
+      console.log('picked tests to run from this repo %o', testsToRun)
+    }
   }
 
   // https://github.com/bahmutov/cypress-grep
