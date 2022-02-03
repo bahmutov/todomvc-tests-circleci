@@ -53,7 +53,7 @@ module.exports = async (on, config) => {
   // so if we find the test tags in the pull request body
   // we can grep for them by setting the grep config
   const tags = ['@log', '@sanity', '@user']
-  const testsToRun = await pickTestsFromPullRequest(on, config, {
+  let testsToRun = await pickTestsFromPullRequest(on, config, {
     // try to find checkbox lines in the pull request body with these tags
     tags,
     // repo with the pull request text to read
@@ -68,13 +68,13 @@ module.exports = async (on, config) => {
     // to get a private repo above, you might need a personal token
     token: process.env.PERSONAL_GH_TOKEN || process.env.GITHUB_TOKEN,
   })
-  console.log('picked tests to run 1 %o', testsToRun)
+  console.log('picked tests to run from app repo %o', testsToRun)
 
   if (!hasPickedTestsToRun(testsToRun) && process.env.CIRCLE_PULL_REQUEST) {
     console.log('checking if there are tests to run in this repo pull request')
     const prNumber = getCirclePrNumber(process.env.CIRCLE_PULL_REQUEST)
     if (prNumber) {
-      await pickTestsFromPullRequest(on, config, {
+      testsToRun = await pickTestsFromPullRequest(on, config, {
         tags,
         // search this repo
         owner: 'bahmutov',
@@ -83,6 +83,7 @@ module.exports = async (on, config) => {
         // to get a private repo above, you might need a personal token
         token: process.env.PERSONAL_GH_TOKEN || process.env.GITHUB_TOKEN,
       })
+      console.log('picked tests to run from this repo %o', testsToRun)
     }
   }
 
