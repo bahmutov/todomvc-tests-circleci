@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 const { setGitHubCommitStatus } = require('../../src')
+const pickTestsFromPullRequest = require('grep-tests-from-pull-requests')
 
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
@@ -37,7 +38,7 @@ module.exports = async (on, config) => {
   // include this plugin before cypress-grep
   // so if we find the test tags in the pull request body
   // we can grep for them by setting the grep config
-  await require('grep-tests-from-pull-requests')(on, config, {
+  await pickTestsFromPullRequest(on, config, {
     // try to find checkbox lines in the pull request body with these tags
     tags: ['@log', '@sanity', '@user'],
     // repo with the pull request text to read
@@ -52,6 +53,7 @@ module.exports = async (on, config) => {
     // to get a private repo above, you might need a personal token
     token: process.env.PERSONAL_GH_TOKEN || process.env.GITHUB_TOKEN,
   })
+  // TODO if there are no tests picked from the app repo, try picking from this repo
 
   // https://github.com/bahmutov/cypress-grep
   require('cypress-grep/src/plugin')(config)
