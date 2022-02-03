@@ -57,6 +57,8 @@ module.exports = async (on, config) => {
     // to get a private repo above, you might need a personal token
     token: process.env.PERSONAL_GH_TOKEN || process.env.GITHUB_TOKEN,
   })
+  console.log('picked tests to run 1 %o', testsToRun)
+
   // TODO if there are no tests picked from the app repo, try picking from this repo
   if (!hasPickedTestsToRun(testsToRun)) {
     console.log('checking if there are tests to run in this repo pull request')
