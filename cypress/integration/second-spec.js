@@ -14,4 +14,5 @@ it('completes second item', { tags: ['@sanity', '@user'] }, () => {
   // the other items are not completed
   cy.get('.todo').eq(0).should('not.have.class', 'completed')
   cy.get('.todo').eq(2).should('not.have.class', 'completed')
+  cy.screenshot('second-spec-user', { capture: 'runner' })
 })
