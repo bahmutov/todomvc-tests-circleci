@@ -29,7 +29,7 @@
     "debug": "^4.3.3",
     "find-cypress-specs": "^1.10.0",
     "got": "^11.8.3",
-    "grep-tests-from-pull-requests": "^1.1.0",
+    "grep-tests-from-pull-requests": "^1.2.0",
     "prettier": "^2.3.2"
   }
 }
