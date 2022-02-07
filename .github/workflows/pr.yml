@@ -7,10 +7,10 @@ jobs:
   trigger-tests:
     runs-on: ubuntu-20.04
     steps:
-      - name: Dump GitHub event
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github.event) }}
-        run: echo "$GITHUB_CONTEXT"
+      - uses: actions/checkout@v2
 
-      - name: Trigger tests
-        run: Echo "Triggering tests"
+      - name: Check the PR body change
+        env:
+          GITHUB_EVENT: ${{ toJson(github.event) }}
+        run: |
+          node ./src/pr
