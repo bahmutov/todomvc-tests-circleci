@@ -27,3 +27,4 @@ jobs:
         uses: cypress-io/github-action@v2
         env:
           DEBUG: grep-tests-from-pull-requests
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
