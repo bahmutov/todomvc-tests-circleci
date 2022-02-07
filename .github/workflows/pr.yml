@@ -22,3 +22,5 @@ jobs:
       - name: Run tests if the user filled the checkbox
         if: ${{ steps.check-pr.outputs.shouldRun }}
         uses: cypress-io/github-action@v2
+        env:
+          DEBUG: grep-tests-from-pull-requests
