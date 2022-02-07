@@ -7,5 +7,10 @@ jobs:
   trigger-tests:
     runs-on: ubuntu-20.04
     steps:
+      - name: Dump GitHub event
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github.event) }}
+        run: echo "$GITHUB_CONTEXT"
+
       - name: Trigger tests
         run: Echo "Triggering tests"
