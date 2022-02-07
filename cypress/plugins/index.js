@@ -31,8 +31,9 @@ function hasPickedTestsToRun(testsToRun) {
   return true
 }
 
-function getCirclePrNumber(prUrl) {
+function getPrNumber(prUrl) {
   // prUrl is like https://github.com/.../pull/9
+  // also works with GitHub refs like GITHUB_REF=refs/pull/12/merge
   const match = prUrl.match(/\/pull\/(?<pr>\d+)/)
   if (!match) {
     console.error('Cannot find the pull request number in the URL %s', prUrl)
@@ -71,17 +72,22 @@ module.exports = async (on, config) => {
   console.log('picked tests to run from app repo %o', testsToRun)
 
   if (!hasPickedTestsToRun(testsToRun)) {
-    if (process.env.CIRCLE_PULL_REQUEST) {
+    if (
+      process.env.CIRCLE_PULL_REQUEST ||
+      process.env.GITHUB_ACTIONS === 'true'
+    ) {
       console.log(
         'checking if there are tests to run in this repo pull request',
       )
-      const prNumber = getCirclePrNumber(process.env.CIRCLE_PULL_REQUEST)
+      const prRef = process.env.CIRCLE_PULL_REQUEST || process.env.GITHUB_REF
+      console.log('pull request ref %s', prRef)
+      const prNumber = getPrNumber(prRef)
       if (prNumber) {
         testsToRun = await pickTestsFromPullRequest(on, config, {
           tags,
           // search this repo
           owner: 'bahmutov',
-          repo: process.env.CIRCLE_PROJECT_REPONAME,
+          repo: 'todomvc-tests-circleci',
           pull: prNumber,
           // to get a private repo above, you might need a personal token
           token: process.env.PERSONAL_GH_TOKEN || process.env.GITHUB_TOKEN,
