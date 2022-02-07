@@ -1,7 +1,8 @@
 name: pr
 on:
   pull_request:
-    - edited
+    types:
+      - edited
 jobs:
   trigger-tests:
     runs-on: ubuntu-20.04
