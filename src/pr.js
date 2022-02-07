@@ -8,7 +8,17 @@ if (ghEvent.action !== 'edited') {
   process.exit(0)
 }
 
+// TODO check if this was really an edit of the PR body
 console.log('PR body before')
 console.log(ghEvent.changes.body.from)
 console.log('PR body after')
-console.log(ghEvent.body)
+console.log(ghEvent.pull_request.body)
+
+const runTestsCheckboxUnfilled = '[ ] re-run the tests'
+const runTestsCheckboxFilled = '[x] re-run the tests'
+if (
+  ghEvent.changes.body.from.includes(runTestsCheckboxUnfilled) &&
+  ghEvent.pull_request.body.includes(runTestsCheckboxFilled)
+) {
+  console.log('Running tests')
+}
