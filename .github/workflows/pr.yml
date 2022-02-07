@@ -16,6 +16,8 @@ jobs:
         env:
           GITHUB_EVENT: ${{ toJson(github.event) }}
 
-      - name: Run tests if the user clicked the checkbox
+      # we could trigger the tests to run on CircleCI
+      # or we can just run them here
+      - name: Run tests if the user filled the checkbox
         if: ${{ steps.check-pr.outputs.shouldRun }}
-        run: echo "Running tests..."
+        uses: cypress-io/github-actions@v2
