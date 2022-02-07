@@ -16,6 +16,9 @@ jobs:
         env:
           GITHUB_EVENT: ${{ toJson(github.event) }}
 
+      - name: Print GITHUB variables
+        run: npx @bahmutov/print-env GITHUB
+
       # we could trigger the tests to run on CircleCI
       # or we can just run them here using the action
       # https://github.com/cypress-io/github-action

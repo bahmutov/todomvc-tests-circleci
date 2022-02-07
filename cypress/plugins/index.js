@@ -70,20 +70,24 @@ module.exports = async (on, config) => {
   })
   console.log('picked tests to run from app repo %o', testsToRun)
 
-  if (!hasPickedTestsToRun(testsToRun) && process.env.CIRCLE_PULL_REQUEST) {
-    console.log('checking if there are tests to run in this repo pull request')
-    const prNumber = getCirclePrNumber(process.env.CIRCLE_PULL_REQUEST)
-    if (prNumber) {
-      testsToRun = await pickTestsFromPullRequest(on, config, {
-        tags,
-        // search this repo
-        owner: 'bahmutov',
-        repo: process.env.CIRCLE_PROJECT_REPONAME,
-        pull: prNumber,
-        // to get a private repo above, you might need a personal token
-        token: process.env.PERSONAL_GH_TOKEN || process.env.GITHUB_TOKEN,
-      })
-      console.log('picked tests to run from this repo %o', testsToRun)
+  if (!hasPickedTestsToRun(testsToRun)) {
+    if (process.env.CIRCLE_PULL_REQUEST) {
+      console.log(
+        'checking if there are tests to run in this repo pull request',
+      )
+      const prNumber = getCirclePrNumber(process.env.CIRCLE_PULL_REQUEST)
+      if (prNumber) {
+        testsToRun = await pickTestsFromPullRequest(on, config, {
+          tags,
+          // search this repo
+          owner: 'bahmutov',
+          repo: process.env.CIRCLE_PROJECT_REPONAME,
+          pull: prNumber,
+          // to get a private repo above, you might need a personal token
+          token: process.env.PERSONAL_GH_TOKEN || process.env.GITHUB_TOKEN,
+        })
+        console.log('picked tests to run from this repo %o', testsToRun)
+      }
     }
   }
 
