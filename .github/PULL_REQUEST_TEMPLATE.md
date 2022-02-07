@@ -9,7 +9,11 @@ Please pick all tests you would like to run against this pull request
 - [ ] tests tagged `@sanity`
 - [ ] tests tagged `@user`
 
-You can find all the tagged tests by running `npm run names` and `npm run tags` in this repository.
+To re-run the tests, pick the tags above then click the checkbox below
+
+- [ ] re-run the tests
+
+Tip: You can find all the tagged tests by running `npm run names` and `npm run tags` in this repository.
 
 ## Base URL
 
