@@ -7,10 +7,24 @@ jobs:
   trigger-tests:
     runs-on: ubuntu-20.04
     steps:
-      - name: Dump GitHub event
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github.event) }}
-        run: echo "$GITHUB_CONTEXT"
+      - uses: actions/checkout@v2
 
-      - name: Trigger tests
-        run: Echo "Triggering tests"
+      - name: Check the PR
+        # https://github.com/bahmutov/should-run-github-action
+        uses: bahmutov/should-run-github-action@v1
+        id: check-pr
+        env:
+          GITHUB_EVENT: ${{ toJson(github.event) }}
+
+      - name: Print GITHUB variables
+        run: npx @bahmutov/print-env GITHUB
+
+      # we could trigger the tests to run on CircleCI
+      # or we can just run them here using the action
+      # https://github.com/cypress-io/github-action
+      - name: Run tests if the user filled the checkbox
+        if: ${{ steps.check-pr.outputs.shouldRun }}
+        uses: cypress-io/github-action@v2
+        env:
+          DEBUG: grep-tests-from-pull-requests
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
