@@ -112,7 +112,7 @@ workflows:
             - run:
                 name: Check if need to skip Cypress tests
                 command: |
-                  if npx should-pr-run-cypress-tests --pr-url $CIRCLE_PULL_REQUEST;
+                  if npx should-pr-run-cypress-tests --pr-url $CIRCLE_PULL_REQUEST; then
                     echo "Should be running Cypress tests ✅"
                   else
                     echo "Skipping Cypress tests 😴"
