@@ -110,6 +110,10 @@ workflows:
           # after install, set the pending commit status right away
           post-install:
             - run:
+                name: Check if need to skip Cypress tests
+                command: |
+                  # npx should-pr-run-cypress-tests --owner bahmutov --repo todomvc-tests-circleci --pull 12
+            - run:
                 name: Set common commit status
                 command: |
                   if [[ ! -z "<< pipeline.parameters.TEST_COMMIT >>" ]]; then
