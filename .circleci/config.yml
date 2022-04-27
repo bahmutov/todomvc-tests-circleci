@@ -110,13 +110,15 @@ workflows:
           # after install, set the pending commit status right away
           post-install:
             - run:
-                name: Check if need to skip Cypress tests
+                name: Check if need to skip Cypress tests on PR
                 command: |
-                  if npx should-pr-run-cypress-tests --pr-url $CIRCLE_PULL_REQUEST; then
-                    echo "Should be running Cypress tests ✅"
-                  else
-                    echo "Skipping Cypress tests 😴"
-                    circleci-agent step halt
+                  if [[ ! -z "$CIRCLE_PULL_REQUEST" ]]; then
+                    if npx should-pr-run-cypress-tests --pr-url $CIRCLE_PULL_REQUEST; then
+                      echo "Should be running Cypress tests ✅"
+                    else
+                      echo "Skipping Cypress tests 😴"
+                      circleci-agent step halt
+                    fi
                   fi
             - run:
                 name: Set common commit status
