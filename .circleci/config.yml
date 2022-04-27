@@ -140,7 +140,7 @@ workflows:
 
       - cypress/install:
           name: Cypress install
-          with:
+          context:
             # to cancel the CircleCI workflow we need to use personal API token
             - with-circleci-personal-token
           # after install, set the pending commit status right away
