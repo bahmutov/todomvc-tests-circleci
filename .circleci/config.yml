@@ -112,7 +112,12 @@ workflows:
             - run:
                 name: Check if need to skip Cypress tests
                 command: |
-                  # npx should-pr-run-cypress-tests --owner bahmutov --repo todomvc-tests-circleci --pull 12
+                  if npx should-pr-run-cypress-tests --pr-url $CIRCLE_PULL_REQUEST;
+                    echo "Should be running Cypress tests ✅"
+                  else
+                    echo "Skipping Cypress tests 😴"
+                    circleci-agent step halt
+                  fi
             - run:
                 name: Set common commit status
                 command: |
