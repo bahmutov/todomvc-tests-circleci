@@ -67,6 +67,7 @@ commands:
       - run:
           name: Check if need to skip Cypress tests on PR
           # https://discuss.circleci.com/t/does-circleci-step-halt-works-with-version-2-1/36674/4
+          # to cancel the CircleCI workflow we need to use personal API token
           command: |
             if [[ ! -z "$CIRCLE_PULL_REQUEST" ]]; then
               if npx should-pr-run-cypress-tests --pr-url $CIRCLE_PULL_REQUEST; then
@@ -140,9 +141,6 @@ workflows:
 
       - cypress/install:
           name: Cypress install
-          context:
-            # to cancel the CircleCI workflow we need to use personal API token
-            - with-circleci-personal-token
           # after install, set the pending commit status right away
           # but first check if the workflow is unnecessary
           post-install:
