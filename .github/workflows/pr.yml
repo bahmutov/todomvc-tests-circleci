@@ -7,7 +7,7 @@ jobs:
   trigger-tests:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Check the PR
         # https://github.com/bahmutov/should-run-github-action
@@ -24,7 +24,7 @@ jobs:
       # https://github.com/cypress-io/github-action
       - name: Run tests if the user filled the checkbox
         if: ${{ steps.check-pr.outputs.shouldRun }}
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4
         env:
           DEBUG: grep-tests-from-pull-requests
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
