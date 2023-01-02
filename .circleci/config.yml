@@ -48,6 +48,7 @@ commands:
                   echo "Switching to branch << parameters.BRANCH_NAME >> if it exists"
                   git checkout << parameters.BRANCH_NAME >> || true
                   git pull origin << parameters.BRANCH_NAME >> || true
+
   print_git:
     description: |
       Prints the current git branch and the commit hash.
@@ -59,6 +60,41 @@ commands:
           command: |
             echo "current branch is: $(git branch -a)"
             echo "current commit is: $(git rev-parse --short HEAD)"
+
+  check-run-cypress-tests-and-cancel:
+    description: Check if we want to run Cypress tests and cancel the current workflow
+    steps:
+      - run:
+          name: Check if need to skip Cypress tests on PR
+          # https://discuss.circleci.com/t/does-circleci-step-halt-works-with-version-2-1/36674/4
+          # to cancel the CircleCI workflow we need to use personal API token
+          command: |
+            if [[ ! -z "$CIRCLE_PULL_REQUEST" ]]; then
+              if npx should-pr-run-cypress-tests --pr-url $CIRCLE_PULL_REQUEST; then
+                echo "Should be running Cypress tests ✅"
+              else
+                echo "Skipping Cypress tests 😴"
+                echo "CIRCLE_WORKFLOW_ID ${CIRCLE_WORKFLOW_ID}"
+                echo "BAHMUTOV_CIRCLE_TOKEN ${BAHMUTOV_CIRCLE_TOKEN}"
+                curl  -X POST https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}/cancel \
+                      -H 'Accept: application/json' -u '${BAHMUTOV_CIRCLE_TOKEN}:'
+              fi
+            fi
+
+  check-run-cypress-tests:
+    description: Check if we want to run Cypress tests and halt the current job
+    steps:
+      - run:
+          name: Check if need to skip Cypress tests on PR
+          command: |
+            if [[ ! -z "$CIRCLE_PULL_REQUEST" ]]; then
+              if npx should-pr-run-cypress-tests --pr-url $CIRCLE_PULL_REQUEST; then
+                echo "Should be running Cypress tests ✅"
+              else
+                echo "Skipping Cypress tests 😴"
+                circleci-agent step halt
+              fi
+            fi
 
 jobs:
   info:
@@ -108,7 +144,9 @@ workflows:
       - cypress/install:
           name: Cypress install
           # after install, set the pending commit status right away
+          # but first check if the workflow is unnecessary
           post-install:
+            - check-run-cypress-tests-and-cancel
             - run:
                 name: Set common commit status
                 command: |
@@ -131,7 +169,6 @@ workflows:
           post-checkout:
             - switch_branch:
                 BRANCH_NAME: << pipeline.parameters.TEST_BRANCH >>
-
           config: 'baseUrl=<< pipeline.parameters.TEST_URL >>'
           # pass the cypress-grep parameters through the --env parameter
           env: grep="<< pipeline.parameters.GREP >>",burn=<< pipeline.parameters.BURN >>,testCommit=<< pipeline.parameters.TEST_COMMIT >>
